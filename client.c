@@ -48,6 +48,8 @@ int main(int argc, char *argv[]) {
 	
 	portno = atoi(argv[2]); //assumes string contains int, else undefined behavior.
 	sockfd = socket(AF_INET, SOCK_STREAM, 0); // socket(protocol-family, socket-type, socket-protocol-type) => file-descriptor
+	if (sockfd < 0) { error("ERROR opening socket"); }
+	server = gethostbyname(argv[1]);
 	if ( server == NULL) {
 		fprintf(stderr, "ERROR, no such host\n");
 		exit(0);
