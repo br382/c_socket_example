@@ -1,11 +1,14 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> //exit()
+#include <string.h> //memset()
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <unistd.h> //read()/write()
 
 //bzero(struct, size) is obsolete, use memset(struct, value, size) instead
+//bcopy(src, dest, size) is obsolete, use memcpy(dest, src, size) instead
 
 /*
 struct hostent {
@@ -50,9 +53,9 @@ int main(int argc, char *argv[]) {
 		exit(0);
 	}
 	
-	bzero( (char *) &serv_addr, sizeof(serv_addr)); //zero-out struct 'serv_addr'
+	memset( (char *) &serv_addr, 0, sizeof(serv_addr)); //zero-out struct 'serv_addr'
 	serv_addr.sin_family = AF_INET;
-	bcopy( (char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length); //see notes above on 'struct hostent'
+	memcpy( (char *)&serv_addr.sin_addr.s_addr, (char *)server->h_addr, server->h_length); //see notes above on 'struct hostent'
 	serv_addr.sin_port = htons(portno); //host-bytes => network-bytes
 	// Attempt connection, if return is negitive, exit with error message.
 	if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) { error("ERROR connection to remote"); }
