@@ -1,9 +1,11 @@
 // A simple server using TCP with port passed as an argument
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h> //exit()
+#include <string.h> //memset()
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <unistd.h> //read()/write()
 
 //bzero(struct,size) is obsolete, use memset(struct,value,size) instead
 
@@ -42,11 +44,11 @@ int main(int argc, char *argv[]) {
 	serv_addr.sin_port = htons(portno); //host bytes => network bytes
 	
 	// Attempt bind, and test if return value is less than zero, if true "ERROR".
-	if ( bind(sockfd, (struct sockaddr *) *serv_addr, sizeof(serv_addr)) <0) { error("ERROR on accept"); }
+	if ( bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) <0) { error("ERROR on accept"); }
 	listen(sockfd,5); //listen(file-descriptor, max-queue-wait-len);
 
 	clilen = sizeof(cli_addr);
-	newsockfd = accept(sockfd, (struct sockaddr *) &cli_adr, &clilen);
+	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
 	if (newsockfd < 0) { error("ERROR on accept"); }
 	
 	memset(buffer, 0, BUF_SIZE);
